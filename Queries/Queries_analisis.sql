@@ -10,9 +10,9 @@
       ON p.ProductKey=s.ProductKey
       left join Customer AS c
       ON c.CustomerKey=s.CustomerKey
-      WHERE s.StoreKey is null 
-            or s.ProductKey is null 
-            or s.CustomerKey is null;
+      WHERE st.StoreKey is null 
+            or p.ProductKey is null 
+            or c.CustomerKey is null;
 ---Resultado=Todo OK
 
 
