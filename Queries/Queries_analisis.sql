@@ -1,7 +1,7 @@
 --Queries VALIDACION DE DTOS
 
 --1. Validar que no hay datos null
-  --Debido a que las tablas cuando se cargaron se definieron primary key estas no pueden ser null,pero validaremos que las llaves secundarias no tengan valores null
+  
   SELECT *
   FROM SALES AS s
       LEFT JOIN Store AS st
@@ -40,8 +40,6 @@ WHERE Delivery_Date IS NOT NULL AND StoreKey<>'0';
 SELECT MIN(order_date) AS min_order,
        MAX(order_date) AS max_order
 FROM sales;
-/* Como solo se tiene hasta febrero 2021 se ignorara todo el 2021 para analizar años completos,pero como tampoco 
-queremos perder esos datos, se creara una vista de tal manera que se conserve la info del 2021 */
 
 --5 Creacion de vista usada recurrentemente
  -- Ignorar el año 2021 y añadir en la tabla de hechos el costo y precio */
@@ -125,9 +123,6 @@ FROM sales_2
 GROUP BY CASE WHEN StoreKey='0' THEN 'Virtual' ELSE 'Fisica' END,
          DATETRUNC(YEAR,order_date)
 ORDER BY Tipo_tienda DESC,year_date ASC
-
-
-
 
 --4.¿Qué productos roto más y me generan mayor utilidad?
 CREATE VIEW top_movimiento AS
@@ -223,7 +218,6 @@ SELECT year_order,
 FROM tipo_entrega
 ORDER BY Tipo_Entrega ASC,year_order ASC;
 
-
 --7 ¿Pedidos al año por cliente?
 WITH pedidos_globales AS (
 SELECT DISTINCT order_date,CustomerKey,Order_Number
@@ -291,8 +285,6 @@ FROM dolar_others2
 WHERE ABS(ly_vs_y_dolar-ly_vs_y_otros)>0.1
 
 --10.1 Impacto del tipo de canal en las ventas generales
-
-
 ---Hay clientes que han hecho compras online y en tienda presencial
 SELECT CustomerKey,
        COUNT(DISTINCT CASE WHEN StoreKey='0' then 1 else 2 end ) numero_tiendas
@@ -349,8 +341,6 @@ SELECT year_order,
        FORMAT(Ventas/SUM(Ventas) OVER(PARTITION BY year_order,Canal_entrada),'P2') AS porc_anual
 FROM versus_canal
 ORDER BY Canal_entrada,year_order,Canal_Venta;
-
-
 
 --10.2 Impacto del tipo de canal en las ventas generales a detalle
 /*Se quiere medir el impacto anual de los clientes nuevos en ese año,claro que hay clientes que ingresaron al inicio,mediados

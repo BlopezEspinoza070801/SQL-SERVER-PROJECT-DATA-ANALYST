@@ -91,7 +91,6 @@ En este análisis, la meta es ayudar al departamento de Ventas a responder las s
 ## Limpieza de Datos
 1. Validar Datos null
 ```sql
-  --Debido a que las tablas cuando se cargaron se definieron primary key estas no pueden ser null,pero validaremos que las llaves secundarias no tengan valores null
   SELECT *
   FROM SALES AS s
       LEFT JOIN Store AS st
@@ -603,11 +602,9 @@ Por  lo que refuerza la idea de impulsar el canal virtual no solo afecta sus ven
 
 ### Conclusion
 
-- Este análisis brindó información relevante sobre las ventas de la empresa **Mtec** que servirá para la planificación de objetivos del proximo periodo
+- Este análisis brindó información relevante sobre las ventas de la empresa Mtec que servirá para la planificación de objetivos a mediano y largo plazo
 
 - Uno de los descubrimientos principales fue que el canal virtual presenta las mayores ventas si se compara individualmente con las tiendas fisicas y no es el punto de venta más antiguo.
-
-- Se detecto que en hay skus que son idénticos pero solo cambia el color,en futuros análisis hay que ver que tanto influye el color en su venta
 
 - Se vio que los clientes que ingresan por el canal virtual, a lo largo del tiempo,empiezan a pasar sus ventas del canal virtual al canal físico en un % considerable,y refuerza la idea de que el canal virtual llega a clientes que terminan en el canal físico.
 
@@ -616,6 +613,7 @@ que actualmente es de en promedio 4 dias y manejar la posibilidad de comenzar co
 
 - La empresa debe desarrollar una cultura de retención de clientes,ya que se vio una mejora en la cantidad de pedidos anuales por cliente,pero si las gerencias pertinentes actúan esa retención puede mejorar.
 
-- La empresa debe notificar a las tiendas que manejan sus ventas en otras monedas que no son Dolar,que sus resultados general y por vendedor deberan ser presentados en la moneda dolar,para que se puedan comparar todas las tiendas.
+- La empresa debe notificar a las tiendas que manejan sus ventas en otras monedas que no son Dolar,que sus resultados general y por vendedor deberan ser presentados en la moneda dolar,para que se puedan comparar todas las tiendas y disminuir el efecto el tipo de cambio fluctuante diario
 
+- Se detecto que en hay skus que son idénticos pero solo cambia el color,en futuros análisis hay que ver que tanto influye el color en su venta para poder identificar productos estrella(alta rotación,alta utilidad)
 
