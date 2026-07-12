@@ -473,7 +473,7 @@ WHERE ABS(ly_vs_y_dolar-ly_vs_y_otros)>0.1
 
 Hay 11 registros donde si se comparan las ventas con respecto al año anterior usando la moneda local,el aumento difiere considerablemente del aumento si se compara usando la moneda Dolar ,casi en un 10% extra que en algunos casos aumenta las ventas y en otros las disminuye, y tomando en cuenta que  mis costos y precios de productos estan en dolar,lo mejor seria evaluarlo todo en dolar y de esta manera evitar estos casos donde hay un aumento artificial de ventas que se podría deber principalmente al tipo de cambio fluctuante dia tras dia ,esta decisión es crucial a la hora de evaluar el rendimiento de vendedores , aumento de ventas generales o el tema de comisiones a vendedores.
 
-### 10. **Canal de entrada vs canal de ventas:** ¿Cuál es eli mpacto del tipo de canal en las ventas generales?
+### 10. **Canal de entrada vs canal de ventas:** ¿Cuál es el impacto del tipo de canal en las ventas generales?
 Para esta pregunta usaremos CASE WHEN,CTEs,funciones de Venta Row_number,Joins y funciones de Formato
 ```sql
 ---Hay clientes que han hecho compras online y en tienda presencial
