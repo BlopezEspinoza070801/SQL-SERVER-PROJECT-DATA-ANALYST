@@ -2,32 +2,26 @@
 # Project SQL:Análisis Global(Ventas-Clientes)
 
 ## Resumen (Overview)
-_La gerencia del area de ventas de *Mtech* desea un vistazo general de como se encuentra actualmente las ventas para poder identificar posibles fortalezas y debilidades para tomarlas en cuenta en el plan de trabajo del próximo año.
+La gerencia del area de ventas de *Mtech*,grupo empresarial de ventas de productos tecnológicos, desea un vistazo general de como se encuentra actualmente las ventas para poder identificar posibles fortalezas y debilidades para tomarlas en cuenta en el plan de trabajo del próximo año.
 
 El objetivo de este proyecto es utilizar **SQL** dentro de **SQL Server Management Studio**,para poder analizar los datos y brindar recomendaciones al departamento de ventas que facilite la toma de decisiones.
-
-
-## 📩 Red Social
-<p align="center">
-  <a href="https://www.linkedin.com/in/bryan-ricardo-l%C3%B3pez-espinoza-8b1a07324/">
-    <img src="https://img.shields.io/badge/LinkedIn-0077B5?style=flat-square&logo=linkedin&logoColor=white" />
-  </a>
-</p>
 
 ## Estructura del Proyecto
 
 - [Sobre los Datos](#sobre-los-datos)
-- [Ingesta de Datos](#Ingesta-de-Datos)
-- [Diagrama E-R](#Diagrama-E-R)
-- [Tareas](#tareas)
+- [Ingesta de Datos](#ingesta-de-datos)
+- [Diagrama E-R](#diagrama-e-r)
+- [Tareas](#tareas-task)
 - [Limpieza de Datos](#limpieza-de-datos)
-- [Análisis Exploratorio de Datos e Insights](#análisis-exploratorio-de-datos-e-insights)
+- [Análisis Exploratorio de Datos e Insights](#análisis-exploratorio-de-datos-eda-e-insights)
+
+
 
 ## Sobre los Datos
 
 Los datos originales, junto con una explicación de cada columna, se pueden encontrar [aquí](https://www.kaggle.com/datasets/bhavikjikadara/global-electronics-retailers/data).
 
-El conjunto de datos incluye cinco tablas con información al respecto de los clientes,productos,Tiendas,Ventas,Tipo de cambio de una empresa de ventas de productos electrónicos y que tiene varios puntos de venta físicos en diferentes paises y también un punto de venta virtual.
+El conjunto de datos incluye cinco tablas con información al respecto de los **clientes,productos,Tiendas,Ventas,Tipo de cambio** de una empresa de ventas de productos electrónicos y que tiene varios puntos de venta físicos en diferentes paises y también un punto de venta virtual.
 
 
 ## Ingesta de Datos
@@ -35,7 +29,7 @@ El conjunto de datos incluye cinco tablas con información al respecto de los cl
 Antes de realizar el análisis,se crea la base de datos y las conexiones necesarias entre la tabla hecho y las tablas dimension,pero se realiza un proceso de limpieza para poder trabajar correctamente
 
 ```sql
--- Limpieza y normalización de tabla Productos --
+-- Limpieza y estandarizacion de tabla Sales
 
 UPDATE Product
 SET Unit_Costo_USD=TRIM(REPLACE(REPLACE(Unit_Costo_USD,'$',''),',','')),
@@ -54,7 +48,7 @@ ALTER COLUMN Unit_Costo_USD DECIMAL(10,3);
 ALTER TABLE Product
 ALTER COLUMN Unit_Price_USD DECIMAL(10,3);
 
---Insertar llave primaria en Sales,Como buena practica--
+--Insertar llave primaria en Sales,Como buena practica
 
 --Validamos que es unica la combinacion order_number,line y que no tenga valores null--
 SELECT ORDER_NUMBER,LINE,
@@ -66,7 +60,7 @@ HAVING COUNT(*)>1;
 SELECT ORDER_NUMBER,LINE
 FROM Sales
 where Order_Number is null or line is null;
---Hacemos que a futuro tampoco acepten valores null--
+--Hacemos que a futuro tampoco acepten valores null
 ALTER TABLE SALES
 ALTER COLUMN Order_Number NVARCHAR(100) NOT NULL;
 ALTER TABLE SALES
@@ -77,11 +71,11 @@ ADD CONSTRAINT PK_Sales PRIMARY KEY (Order_Number, Line)
 ```
 ## Diagrama-E-R
 
-Se unieron las tablas dimensiones con la tabla hecho a través de sus llaves primarias y secundarias,no se realizo la conexión entre Exchange_Rates ya que no sera utilizada en la mayoria del projecto
+Se unieron las tablas dimensiones con la tabla hecho a través de sus llaves primarias y secundarias,no se realizo la conexión entre Exchange_Rates ya que no sera utilizada en la mayoria del projecto.
 ![DATA PROJECT](./Picture/DiagramaE-R.png)
 ## Tareas (Task)
 
-En este análisis, ayudo al departamento de Ventas a responder las siguientes Preguntas:
+En este análisis, la meta es ayudar al departamento de Ventas a responder las siguientes Preguntas:
 
 1. **Ventas Generales**: En terminos anuales,¿Como va las ventas y utilidad bruta de todo el grupo?
 2. **Mejores resultados por tienda:** ¿Cuál es la tienda que vende más?
@@ -92,10 +86,10 @@ En este análisis, ayudo al departamento de Ventas a responder las siguientes Pr
 7. **Repetición del cliente:** ¿Pedidos al año por cliente?
 8. **Clasterización de clientes:** ¿Cuantos clientes realizan más de una compra anual?
 9. **Dolar vs Otros:** ¿Como evaluo las ventas bajo la moneda de pago o bajo una moneda estándar?
-10. **Canal de entrada vs canal de ventas:** ¿Cuál es eli mpacto del tipo de canal en las ventas generales?
+10. **Canal de entrada vs canal de ventas:** ¿Cuál es el impacto del tipo de canal en las ventas generales?
 
-## limpieza-de-datos
-1. Validad Datos null
+## Limpieza de Datos
+1. Validar Datos null
 ```sql
   --Debido a que las tablas cuando se cargaron se definieron primary key estas no pueden ser null,pero validaremos que las llaves secundarias no tengan valores null
   SELECT *
@@ -109,7 +103,7 @@ En este análisis, ayudo al departamento de Ventas a responder las siguientes Pr
       WHERE s.StoreKey is null 
             or s.ProductKey is null 
             or s.CustomerKey is null;
----Resultado=Todo OK
+--Resultado=Todo OK
 ```
 2. Validar  que cada tienda usa solo un tipo de moneda o varios
 ```sql
@@ -141,7 +135,7 @@ FROM sales;
 /* Como solo se tiene hasta febrero 2021 se ignorara todo el 2021 para analizar años completos,pero como tampoco 
 queremos perder esos datos, se creara una vista de tal manera que se conserve la info del 2021 */
 ```
-5. creación de vista usada recurrentemente
+5. Creación de vista usada recurrentemente
 ```sql
  -- Ignorar el año 2021 y añadir en la tabla de hechos el costo y precio */
 
@@ -157,9 +151,7 @@ FROM sales as s
 ## Análisis Exploratorio de Datos (EDA) e Insights
 
 ### 1. **Ventas Generales**: En terminos anuales,¿Como va las ventas y utilidad bruta de todo el grupo?
-
-Para responder esta pregunta se utilizaron CTE,la función de ventana LAG para captar el registro del año anterior y funciones de formato para poder dejarlo visualmente más presentable
-
+Para esta pregunta utilize principalmente una CTE y la función de Ventan LAG,además de funciones de formato para la parte visual.
 ```sql
 WITH ventas_costo AS(
 SELECT DATETRUNC(YEAR,Order_Date) AS Año,
@@ -189,7 +181,7 @@ que nos de una alerta con respecto al margen o con respecto a la política de co
 
 ### 2. **Mejores resultados por tienda:** ¿Cuál es la tienda que vende más?
 
-Para responder esta pregunta se utilizo la función de ventana Dense_rank,funciones de formato y joins para poder capturar el nombre de la tienda.
+Para esta pregunta utilize LEFT JOIN,la función de tiempo DATEDIFF y la función de ventana DENSE_RANK
 
 ```sql
 --Verificamos que todas las tiendas tengan metros cuadrados
@@ -220,8 +212,7 @@ FROM sales_2 AS s
 
 **Insight Inicial**
 
-Un buen indicador seria ver solo las ventas y fijarse en el TOP,pero tomando en cuenta que cada tienda tienen factores ambientales diferentes, ya que no es lo mismo vender en una tienda de 200 m2 con 10 trabajadores que en una tienda de 30 m2 con 3 trabajadores,por lo
-que una medida más justa seria usar las Ventas/m2.
+Un buen indicador seria ver solo las ventas y fijarse en el TOP,pero tomando en cuenta que cada tienda tienen factores ambientales diferentes, ya que no es lo mismo vender en una tienda de 200 m2 con 10 trabajadores que en una tienda de 30 m2 con 3 trabajadores,por lo que una medida más justa seria usar las Ventas/m2.
 
 
 Observamos que la tienda Online es la que ha tenido las mayores ventas superando a tiendas que tienen mucho más años de antigüedad,esto es un buen indicador a alto nivel de que el sector e-commerce es clave,pero lo que mas resalta es que la tienda Northen Territory Australia esta por debajo de los $20/m2,por lo que antes de sacar alguna conclusion sobre su viabilidad validaremos el estado de todo el grupo de tiendas de ese país
@@ -230,12 +221,12 @@ Observamos que la tienda Online es la que ha tenido las mayores ventas superando
 
 **Insight Final**
 
-Se observa que todas las tiendas han Australia han tenido operaciones hasta el 2020,pero lo extraño es que la tienda Northern Territory solo ha tenido ventas hasta Abril del 2016 por lo que eso justificaria porque sus ventas/m2 son tan bajas, por lo que habría que preguntar si ese punto de venta sigue realmente activo o es una tienda que cerro operaciones o mapear que paso con el registro de sus ventas antes de dar una conclusión con respecto a su operatividad 
+Se observa que todas las tiendas de Australia han tenido operaciones hasta el 2020 menos la tienda Northern Territory que solo ha tenido ventas hasta Abril del 2016 por lo que eso justificaria porque sus ventas/m2 son tan bajas, por lo que habría que preguntar si ese punto de venta sigue realmente activo o es una tienda que cerro operaciones o mapear que paso con el registro de sus ventas antes de dar una conclusión con respecto a su operatividad .
 
 Pero en general la conclusion que si podemos llegar es que las ventas online son clave,ya que venden más que cualquier tienda fisica por lo que es una primera señal para manejar la idea de impulsar con más recursos para ese canal de venta
 
 ### 3. **Virtual vs Fisico:** ¿Cómo son las ventas según el canal?
-Para responder esta pregunta utilizamos CASE WHEN las funciones de ventana en una función acumulada SUM con PARTITION BY
+Para responder esta pregunta utilizamos CASE WHEN y funciones de ventana aplicadas junto a funcione de agregación como SUM()
 
 ```sql
 SELECT CASE WHEN StoreKey='0' THEN 'Virtual' ELSE 'Fisica' END AS Tipo_tienda,
@@ -251,14 +242,13 @@ ORDER BY Tipo_tienda DESC,year_date ASC
 
 **Insight**
 
-Se observa que en el 2016 las ventas virtuales comenzaron representando solo el 16.8% de las ventas anuales pero cerro el 2020 representando el 22.3% de las ventas totales,
-ese aumento de practicamente 6 puntos porcentuales da indicio de que existe una tendencia al aumento constante de ventas por el canal virtual,lo que vuelve a reforzar la idea
+Se observa que en el 2016 las ventas virtuales representaban solo el 16.8% de las ventas anuales pero cerro el 2020 representando el 22.3%,ese aumento de practicamente 6 puntos porcentuales da indicio de que existe una tendencia al aumento constante de ventas por el canal virtual,lo que vuelve a reforzar la idea
 de impulsar más ese canal.
 
-
 ### 4. **Productos estrella:** ¿Qué productos roto más y me generan mayor utilidad?
-Para poder realizar esta pregunta usamos una vista para mejorar la lectura del código,
-y funciones de ventana ,función cast para que al dividir datos enteros si me aparezca los decimales y funcion Interect para hallar el cruce.
+Para poder realizar esta pregunta usamos dos vistas para mejorar la lectura del código,
+y funciones de ventana con rangos acumulaticos sobre la funcion SUM() y al final la función
+INTERSECT para hallar la respuesta
 ```sql
 CREATE VIEW top_movimiento AS
 WITH un_vendidas AS (
@@ -285,7 +275,7 @@ WHERE Acumulado2<0.1;
 
 De los 2592 skus que en algun momento se han vendido,solo 42 engloban el 10% de las ventas globales por lo que estos son los productos clave a nivel de rotación que no deberian faltar en todas las tiendas ,asi que se deberia revisar si existen inventarios de seguridad de acuerdo para evitar quiebres de stock.
 
-Un análisis más profundo sería validar por cada pais que productos son los de mayor rotación y enfocarse en su disponibilidad en las tiendas de cada pais,eso se podría hacer en un 2do nivel de análisis
+Un análisis más profundo sería validar por cada pais que productos son los de mayor rotación y enfocarse en su disponibilidad en las tiendas de cada pais,eso se podría hacer en un 2do nivel de análisis porque que un producto sera de alta rotación no significa que lo sea en todas las tiendas.
 ```sql
 CREATE VIEW top_utilidad AS
 WITH utilidad_bruta AS(
@@ -310,8 +300,7 @@ WHERE Acumulado2<0.1;
 
 **Insight Inicial 2**
 
-De los 2592 skus que se han vendido solo 11 skus engloban el 10% de la Utilidad Bruta de forma histórica,por lo que si realizamos un cruce con los de alta rotacion
-Encontaremos los productos clave tanto en movimiento como en rotación que serian nuestros productos estrella.
+De los 2592 skus que se han vendido solo 11 skus engloban el 10% de la Utilidad Bruta de forma histórica,por lo que si realizamos un cruce con los de alta rotacion, encontaremos los productos clave tanto en movimiento como en rotación que serian nuestros productos estrella.
 ```sql
 SELECT * FROM
 Product
@@ -334,7 +323,9 @@ WHERE Acumulado2<0.1);
 Podemos ver que nos sale 7 skus clave pero en si son solo 2 productos solo que en diferente presentacion de colores,por lo que en un análisis más profundo se podria ver cuanto influye el color en la venta de un mismo producto.
 Igualmente se recomienda realizar el análisis a nivel de cada pais para poder observar el comportamiento real de cada grupo de tiendas por país.
 
-5. **Lead Time general:** ¿Cómo se comporta el leadtime de los pedidos del canal virtual?
+### 5. **Lead Time general:** ¿Cómo se comporta el leadtime de los pedidos del canal virtual?
+
+Para esta pregunta usamos una CTE y funciones de agregación como MAX,AVG y SUM
 ```sql
 WITH pedidos_unicos AS(
 SELECT distinct order_number,order_date,delivery_date
@@ -352,9 +343,10 @@ GROUP BY CUBE(year(order_date));
 
 **Insight**
 
-Se ve que el promedio de dias de entrega ha pasado de 7 dias en el 2016 a 4 dias desde el 2018 en adelante,lo cual es una reducción considerable y es una buena señal de que el servicio de envio ha ido mejorando a través de los años,pero también se ve que hay casos donde el tiempo ha sido hasta de 17 o 13 dias por lo que para validar la mejora del envio año tras año se realizará un análisis más profundo a continuación.
+Se ve que el promedio de dias de entrega ha pasado de 7 dias en el 2016 a 4 dias a partir del 2018 en adelante,lo cual es una reducción considerable y es una buena señal de que el servicio de envio ha ido mejorando a través de los años,pero también se ve que hay casos donde el tiempo ha sido hasta de 17 o 13 dias por lo que para validar la mejora del envio año tras año se realizará un análisis más profundo a continuación.
 
 ### 6. **Clasterización del LeadTime:** ¿El promedio de tiempo de pedidos es la única medida a tomar en cuenta?
+Para esta pregunta usamos una CTE,CASE WHEN para poder clasificar los pedidos y funciones de ventana LAG para un comparativo con el año anterior
 ```sql
 WITH pedidos_unicos AS(
 SELECT distinct order_number,order_date,delivery_date
@@ -385,11 +377,11 @@ ORDER BY Tipo_Entrega ASC,year_order ASC;
 **Insight**
 
 
-Se observa que los pedidos de Tipo C que demoraban de 10 a más han ido disminuyendo año tras año,tanto si lo vemos como una comparación con el año pasado(exceptuando el 2020 que fue un año atípico) como una comparación
-de los pedidos globales(pasando de representar el 17% de los pedidos en el 2016 ha representar menos del 1% ) de ese año por lo que se valida que se esta mejorando el tiempo de envios año tras año,un análisis mas profundo sería ver la causa de esas demoras
-tal vez se terceriza el transporte o el despacho demora mucho,pero el dataset no da información para poder comprobar dichas premisas
+Se observa que los pedidos de Tipo C que demoraban de 10 a más han ido disminuyendo año tras año,tanto si lo vemos como una comparación con el año pasado(exceptuando el 2020 que fue un año atípico) como una comparación de los pedidos anuales generales (pasando de representar el 17% de los pedidos en el 2016 ha representar menos del 1% a partir del 2019 en adelante) , por lo que se valida que se esta mejorando el tiempo de envios año tras año,un análisis mas profundo sería ver la causa de esas demoras
+tal vez se terceriza el transporte o el despacho demora mucho,pero el dataset no da información para poder comprobar dichas premisas.
 
 ### 7. **Repetición del cliente:** ¿Pedidos al año por cliente?
+Para esta pregunta se usa un CTE y funciones de Formato en su mayoria
 ```sql
 WITH pedidos_globales AS (
 SELECT DISTINCT order_date,CustomerKey,Order_Number
@@ -409,6 +401,8 @@ ORDER BY year_order ASC;
 Se puede ver que apesar de los pedidos han ido aumentando año a año la frecuencia de compras nunca ha pasado de 1.5;por lo que es una señal de que a nivel global la mayoria de clientes no repiten compras en el mismo año,esto podria ser un sintoma de que el negocio no tiene una cultura de retención de clientes o por la naturaleza de sus productos es complicado generar una retención,igualmente esta en una vista general por lo que hay que hacer un análisis más profundo antes de decir formalmente que no hay una buena retención de clientes
 
 ### 8. **Clasterización de clientes:** ¿Cuantos clientes realizan más de una compra anual?
+Para esta pregunta se utilizo una CTE,CASE WHEN para clasificar el tipo d cliente y funcion de ventana
+a una funcion SUM()
 ```sql
 WITH clasificacion_cliente AS(
 SELECT CustomerKey,
@@ -432,13 +426,11 @@ ORDER BY clasificacion ASC,year_date ASC;
 
 **Insight**
 
-Se habia visto que de forma global el número de pedidos por cliente no pasaban los 1.5 pedidos pero ahora a la clasterización se le añade una clasificación podemos ver que los clientes que han hecho entre 3-5 pedidos anuales han ido aumentando cada año pasando de ser solo 19 clientes en el 2016 a ser 478 en el 2019 y 92 
-en el 2020,ya vimos que 2020 tuvo una caida atípica ,de forma porcental se puede ver que iniciamos con que un 0.7% de los clientes hacian entre 3 a 5 compras en el 2016
-y en el 2019 el 7.3% de clientes hicieron entre 3-5 compras,sin contar el caso especial de 2020 que hubo un bajo,y otra cosa en el 2019 fue el 1er año donde aparecio
-el grupo de clientes que hace más de 6 pedidos,solo fueron 4 clientes pero es un inicio de que la retención esta aumentando a un ritmo bajo que hace que si se mira de 
-forma global no se perciba mucho,pero si hay una mejora en la retencion
+Se habia visto que de forma global el número de pedidos por cliente no pasaban los 1.5 pedidos pero ahora a la clasterización se le añade una clasificación podemos ver que los clientes que han hecho entre 3-5 pedidos anuales han ido aumentando cada año pasando de ser solo 19 clientes en el 2016 a ser 478 en el 2019 y 92  en el 2020,ya vimos que 2020 tuvo una caida atípica ,de forma porcental se puede ver que iniciamos con que un 0.7% de los clientes hacian entre 3 a 5 compras en el 2016 y en el 2019 el 7.3% de clientes hicieron entre 3-5 compras,y otra cosa en el 2019 fue el 1er año donde aparecio el grupo de clientes que hace más de 6 pedidos,solo fueron 4 clientes pero es un inicio de que la retención esta aumentando a un ritmo bajo que hace que si se mira de forma global no se perciba mucho,pero si hay una mejora en la retencion,leve pero la hay.
 
 ### 9. **Dolar vs Otros:** ¿Como evaluo las ventas bajo la moneda de pago o bajo una moneda estándar?
+Para esta consulta se usaron CTE,funcione de Venta como LAG y ABS ,además de funciones de formato
+para facilitar la visualización
 
 ```sql
 WITH DOLAR_OTHERS AS(
@@ -478,11 +470,10 @@ WHERE ABS(ly_vs_y_dolar-ly_vs_y_otros)>0.1
 **Insight**
 
 
-Hay 12 registros donde si se evalua usando su moneda original las ventas an aumentado de un 10% a 15% más si se compara con la moneda USD Dollar que es la moneda en la que esta originalmente mis costos y precios de productos por lo que no seria buena idea evaluar cada tienda segun su moneda propia ya que ese aumento artificial de ventas se podría deber principalmente al tipo de cambio fluctuante por lo que lo mejor es evaluarlo todo en una sola moneda la cual seria el USD Dollar para cuando se quiere evaluar temas de mejoras de rendimiento de vendedores o aumento de ventas generales o el tema de comisiones a vendedores.
+Hay 11 registros donde si se comparan las ventas con respecto al año anterior usando la moneda local,el aumento difiere considerablemente del aumento si se compara usando la moneda Dolar ,casi en un 10% extra de aumento de ventas, y tomando en cuenta que  mis costos y precios de productos estan en dolar,lo mejor seria evaluarlo todo en dolar y de esta manera evitar estos casos donde hay un aumento artificial de ventas que se podría deber principalmente al tipo de cambio fluctuante ,esta decisión es crucial a la hora de evaluar el rendimiento de vendedores , aumento de ventas generales o el tema de comisiones a vendedores.
 
 ### 10. **Canal de entrada vs canal de ventas:** ¿Cuál es eli mpacto del tipo de canal en las ventas generales?
-
-
+Para esta pregunta usaremos CASE WHEN,CTEs,funciones de Venta Row_number,Joins y funciones de Formato
 ```sql
 ---Hay clientes que han hecho compras online y en tienda presencial
 SELECT CustomerKey,
@@ -546,16 +537,14 @@ ORDER BY Canal_entrada,year_order,Canal_Venta;
 
 ***Canal de entrada fisico***
 
-Si se ve el año 2016,todos los pedidos realizados por los clientes que ingresaron por el canal físico,apenas el 1.48% de esos pedidos fueron para el canal virtual,y para
-el 2019 y 2020 ese porcentaje paso al 14% y 18%,pero hay que entender que para el 2019 y 2020 esos valores engloban a todos los clientes que han ingresado desde el 2016 hasta la fecha,de todas sus compras realizadas anualmente,el 14% y 17% fueron al canal virtual
+En el año 2016, de todos los pedidos realizados por los clientes que ingresaron por el canal físico,apenas el 1.48% de esos pedidos fueron para el canal virtual,y para el 2019 y 2020 ese porcentaje paso al 14% y 18%,pero hay que entender que para el 2019 y 2020 esos valores engloban a todos los clientes que han ingresado desde el 2016 hasta la fecha por el canal fisico,y que de todas sus compras realizadas anualmente,el 14% y 17% fueron al canal virtual,
 
-Por lo que se puede ver que los clientes que ingresan por el canal fisico,un % de sus ventas pasan al canal virtual pero a pesar del efecto acumulado el porcentaje
-maximo llega al 17%,lo cual no da una fuerte señal de que el canal fisico apoye al canal virtual
+Por lo que se puede ver que los clientes que ingresan por el canal fisico,un % de sus ventas pasan al canal virtual pero a pesar del efecto acumulado el porcentaje maximo llega al 17%,lo cual no da una fuerte señal de que el canal fisico apoye al canal virtual.
 
 ***Canal de entrada virtual***
-Si se ve en el año 2016,todos los pedidos realizados por clientes que ingresaron por canal virtual,el 6% de sus pedidos pasaron al canal físico y para el 2019 aumenta 
-a casi 50%(su pico) y en el 2020 represento el 39% ,ambos números son mucho mayores al 6%,pero hay que tener encuenta el efecto acumulado otra vez,por lo que la conclusión
-que se podria dar es que hay un  indicio de que el canal virtual apoya a que las ventas en el canal físico aumenten.
+
+
+En el año 2016,de todos los pedidos realizados por clientes que ingresaron por canal virtual,el 6% de sus pedidos pasaron al canal físico y para el 2019 aumenta a casi 50%(su pico) y en el 2020 represento el 39% ,ambos números son mucho mayores al 6%,pero hay que tener encuenta el efecto acumulado otra vez,por lo que la conclusión que se podria dar es que hay un  indicio de que el canal virtual apoya a que las ventas en el canal físico aumenten.
 Pero para poder reforzar esa idea habria que revisarlo más a detalle
 
 **Impacto del tipo de canal en las ventas generales a detalle**
@@ -603,9 +592,30 @@ ORDER BY Canal_entrada,year_order,Canal_Venta;
 
 **Insight Final**
 
-Ahora se puede el impacto anual de clientes que ingresan anualmente por el canal virtual y se ve que el impacto explicado anteriormente de más del 30% es por un factor acumulado de antiguedad del cliente, pero si se ve que en el 2018 y 2019 paso de un 6% inicial del 2016 a valores de 13.8% y 17.6% lo cual si es un aumento considerable de que los clientes nuevos estan empezando a conocer el canal fisico gracias al canal virtual,en el 2020 el % bajo al 7% pero hay que tener encuenta que fue un año atípico.
+***Canal de entrada fisico***
+En el 2016,solo el 1.48% de las ventas totales de clientes nuevos del canal fisico fue para el canal virtual,y en el 2018 y 2019 los valores fueron de 3.9% y 5.7% por lo que se puede ver un crecimiento de practicamente 1% anualmente;lo cual nos da la idea de que los clientes nuevos que ingresan al canal físico durante ese año por lo menos el 90% de sus ventas se quedan en el canal físico y no se ve un cambio al canal digital realmente representativo.
+
+***Canal de entrada Virtual***
+Ahora se puede el impacto anual de clientes que ingresan anualmente por el canal virtual y se ve que el impacto explicado anteriormente de más del 30% es por un factor acumulado de antiguedad del cliente, pero en el 2018 y 2019 paso de un 6% inicial del 2016 a valores de 13.8% y 17.6% lo cual si es un aumento considerable de que los clientes nuevos estan empezando a conocer el canal fisico gracias al canal virtual,en el 2020 el % bajo al 7% pero hay que tener encuenta que fue un año atípico.
 
 Por lo que si se ve un impacto en el canal fisico gracias al canal virtual pero no es tan grande,el impacto grande viene gracias al efecto acumulado de clientes antiguos,pero no deja de ser una idea interesante,ya que mientras mas clientes ingresan por el canal virtual de manera historica sus ventas tienden a aumentar en el canal fisico.
 Por  lo que refuerza la idea de impulsar el canal virtual no solo afecta sus ventas sino tambien las del canal fisico de forma acumulada.
 
-*/
+### Conclusion
+
+- Este análisis brindó información relevante sobre las ventas de la empresa **Mtec** que servirá para la planificación de objetivos del proximo periodo
+
+- Uno de los descubrimientos principales fue que el canal virtual presenta las mayores ventas si se compara individualmente con las tiendas fisicas y no es el punto de venta más antiguo.
+
+- Se detecto que en hay skus que son idénticos pero solo cambia el color,en futuros análisis hay que ver que tanto influye el color en su venta
+
+- Se vio que los clientes que ingresan por el canal virtual, a lo largo del tiempo,empiezan a pasar sus ventas del canal virtual al canal físico en un % considerable,y refuerza la idea de que el canal virtual llega a clientes que terminan en el canal físico.
+
+- La empresa debe impulsar el canal virtual,comenzando con disminuir el tiempo de entrega de pedidos
+que actualmente es de en promedio 4 dias y manejar la posibilidad de comenzar con políticas de entrega en menos de 24 horas.
+
+- La empresa debe desarrollar una cultura de retención de clientes,ya que se vio una mejora en la cantidad de pedidos anuales por cliente,pero si las gerencias pertinentes actúan esa retención puede mejorar.
+
+- La empresa debe notificar a las tiendas que manejan sus ventas en otras monedas que son Dolar,que sus resultados general y por vendedor deberan ser presentados en la moneda dolar,para que se puedan comparar todas las tiendas.
+
+
