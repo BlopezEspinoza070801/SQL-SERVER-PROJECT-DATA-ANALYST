@@ -178,7 +178,7 @@ SELECT Año,
        FORMAT(UtilidadB/Ventas,'P2') AS MargenBruto
 FROM ventas_costo;
 ```
-![image](./picture/query1.png)
+![image](./Picture/query1.png)
 
 **Insight**
 
@@ -216,7 +216,7 @@ FROM sales_2 AS s
     ORDER BY Ventasxm2 DESC;
     
 ```
-![image](./picture/query2.1.png)
+![image](./Picture/query2.1.png)
 
 **Insight Inicial**
 
@@ -226,7 +226,7 @@ que una medida más justa seria usar las Ventas/m2.
 
 Observamos que la tienda Online es la que ha tenido las mayores ventas superando a tiendas que tienen mucho más años de antigüedad,esto es un buen indicador a alto nivel de que el sector e-commerce es clave,pero lo que mas resalta es que la tienda Northen Territory Australia esta por debajo de los $20/m2,por lo que antes de sacar alguna conclusion sobre su viabilidad validaremos el estado de todo el grupo de tiendas de ese país
 
-![image](./picture/query2.2.png)
+![image](./Picture/query2.2.png)
 
 **Insight Final**
 
@@ -247,7 +247,7 @@ GROUP BY CASE WHEN StoreKey='0' THEN 'Virtual' ELSE 'Fisica' END,
          DATETRUNC(YEAR,order_date)
 ORDER BY Tipo_tienda DESC,year_date ASC
 ```
-![image](./picture/query3.png) 
+![image](./Picture/query3.png) 
 
 **Insight**
 
@@ -279,7 +279,7 @@ SELECT ProductKey,
 FROM top_movimiento
 WHERE Acumulado2<0.1;
 ```
-![image](./picture/query4.1.png) 
+![image](./Picture/query4.1.png) 
 
 **Insight Inicial 1**
 
@@ -306,7 +306,7 @@ SELECT ProductKey,
 FROM top_utilidad
 WHERE Acumulado2<0.1;
 ```
-![image](./picture/query4.2.png) 
+![image](./Picture/query4.2.png) 
 
 **Insight Inicial 2**
 
@@ -327,7 +327,7 @@ SELECT ProductKey
 FROM top_utilidad
 WHERE Acumulado2<0.1);
 ```
-![image](./picture/query4.3.png) 
+![image](./Picture/query4.3.png) 
 
 **Insight Final**
 
@@ -348,7 +348,7 @@ SELECT COALESCE(CAST(YEAR(order_date) AS VARCHAR),'Total') AS year_order,
 FROM pedidos_unicos
 GROUP BY CUBE(year(order_date));
 ```
-![image](./picture/query5.png) 
+![image](./Picture/query5.png) 
 
 **Insight**
 
@@ -380,7 +380,7 @@ SELECT year_order,
 FROM tipo_entrega
 ORDER BY Tipo_Entrega ASC,year_order ASC;
 ```
-![image](./picture/query6.png) 
+![image](./Picture/query6.png) 
 
 **Insight**
 
@@ -402,7 +402,7 @@ from pedidos_globales
 GROUP BY DATETRUNC(YEAR,Order_Date)
 ORDER BY year_order ASC;
 ```
-![image](./picture/query7.png) 
+![image](./Picture/query7.png) 
 
 **Insight**
 
@@ -428,7 +428,7 @@ FROM clasificacion_cliente
 GROUP BY year_date,clasificacion
 ORDER BY clasificacion ASC,year_date ASC;
 ```
-![image](./picture/query8.png) 
+![image](./Picture/query8.png) 
 
 **Insight**
 
@@ -473,7 +473,7 @@ SELECT StoreKey,
 FROM dolar_others2
 WHERE ABS(ly_vs_y_dolar-ly_vs_y_otros)>0.1
 ```
-![image](./picture/query9.png) 
+![image](./Picture/query9.png) 
 
 **Insight**
 
@@ -540,7 +540,7 @@ SELECT year_order,
 FROM versus_canal
 ORDER BY Canal_entrada,year_order,Canal_Venta;
 ```
-![image](./picture/query10.png) 
+![image](./Picture/query10.png) 
 
 **Insight Inicial**
 
@@ -599,7 +599,7 @@ FROM versus_canal
 ORDER BY Canal_entrada,year_order,Canal_Venta;
 
 ```
-![image](./picture/query10.1.png) 
+![image](./Picture/query10.1.png) 
 
 **Insight Final**
 
