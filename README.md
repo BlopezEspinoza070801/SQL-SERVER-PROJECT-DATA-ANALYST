@@ -616,6 +616,6 @@ que actualmente es de en promedio 4 dias y manejar la posibilidad de comenzar co
 
 - La empresa debe desarrollar una cultura de retención de clientes,ya que se vio una mejora en la cantidad de pedidos anuales por cliente,pero si las gerencias pertinentes actúan esa retención puede mejorar.
 
-- La empresa debe notificar a las tiendas que manejan sus ventas en otras monedas que son Dolar,que sus resultados general y por vendedor deberan ser presentados en la moneda dolar,para que se puedan comparar todas las tiendas.
+- La empresa debe notificar a las tiendas que manejan sus ventas en otras monedas que no son Dolar,que sus resultados general y por vendedor deberan ser presentados en la moneda dolar,para que se puedan comparar todas las tiendas.
 
 
